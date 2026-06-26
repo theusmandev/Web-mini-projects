@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bike Petrol Calculator</title>
+    <!-- Google Fonts for premium look -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            --accent: #10B981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f6f8fd 0%, #f1f5f9 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .calculator-wrapper {
+            background-color: var(--card-bg);
+            padding: 35px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h2 {
+            color: var(--text-main);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-main);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #E5E7EB;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-main);
+            transition: all 0.3s ease;
+            background-color: #F9FAFB;
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: #FFF;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+        }
+
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), #6366F1);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Results Grid */
+        .results-container {
+            margin-top: 25px;
+            display: none; /* JavaScript isko show karega */
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .result-card {
+            background-color: #F9FAFB;
+            border: 1px solid #E5E7EB;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .result-card.highlight {
+            background-color: #ECFDF5;
+            border-color: #6EE7B7;
+        }
+
+        .result-title {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .result-card.highlight .result-title {
+            color: #047857;
+        }
+
+        .result-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .result-card.highlight .result-value {
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator-wrapper">
+        <div class="header">
+            <h2>🛵 Petrol Calculator</h2>
+            <p>Apne daily safar ka hisaab lagayein</p>
+        </div>
+        
+        <div class="input-group">
+            <label for="distance">Daily Safar (km)</label>
+            <div class="input-wrapper">
+                <input type="number" id="distance" value="22">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="price">Petrol Price (Rs/Liter)</label>
+            <div class="input-wrapper">
+                <input type="number" id="price" value="300">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="mileage">Bike Mileage (km/Liter)</label>
+            <div class="input-wrapper">
+                <input type="number" id="mileage" value="29.7" step="0.1">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="refuel">Kitne Ka Petrol Dalwaya? (Rs)</label>
+            <div class="input-wrapper">
+                <input type="number" id="refuel" value="1000" placeholder="e.g. 1000, 2000">
+            </div>
+        </div>
+
+        <button onclick="calculatePetrol()">Hisaab Lagao</button>
+
+        <!-- Results Section -->
+        <div class="results-container" id="resultsBox">
+            <div class="results-grid">
+                
+                <div class="result-card">
+                    <div class="result-title">Rozana Petrol (Liters)</div>
+                    <div class="result-value" id="res-daily-fuel">0 L</div>
+                </div>
+
+                <div class="result-card highlight">
+                    <div class="result-title">Rozana Ka Kharcha</div>
+                    <div class="result-value" id="res-daily-cost">Rs. 0</div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-title">Total Petrol Aya</div>
+                    <div class="result-value" id="res-total-fuel">0 L</div>
+                </div>
+
+                <div class="result-card highlight">
+                    <div class="result-title">Kitne Din Chalega?</div>
+                    <div class="result-value" id="res-days">0 Din</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculatePetrol() {
+            // Get values from inputs
+            const distance = parseFloat(document.getElementById('distance').value);
+            const price = parseFloat(document.getElementById('price').value);
+            const mileage = parseFloat(document.getElementById('mileage').value);
+            const refuel = parseFloat(document.getElementById('refuel').value);
+
+            // Validation check
+            if (isNaN(distance) || isNaN(price) || isNaN(mileage) || isNaN(refuel) || mileage <= 0 || price <= 0) {
+                alert("Bhai, please saari fields mein theek numbers likhein!");
+                return;
+            }
+
+            // Calculations
+            const dailyFuel = distance / mileage;
+            const dailyCost = dailyFuel * price;
+            const totalFuel = refuel / price;
+            const daysWillLast = refuel / dailyCost;
+
+            // Update UI with calculated values
+            document.getElementById('res-daily-fuel').innerText = dailyFuel.toFixed(2) + " L";
+            document.getElementById('res-daily-cost').innerText = "Rs. " + Math.round(dailyCost);
+            document.getElementById('res-total-fuel').innerText = totalFuel.toFixed(2) + " L";
+            
+            // Format days neatly
+            let daysText = daysWillLast.toFixed(1) + " Din";
+            if(daysWillLast < 1) {
+                 daysText = "1 Din se kam";
+            }
+            document.getElementById('res-days').innerText = daysText;
+
+            // Show the results section with animation
+            document.getElementById('resultsBox').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>

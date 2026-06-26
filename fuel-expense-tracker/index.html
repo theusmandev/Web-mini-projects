@@ -4,28 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Bike Petrol Calculator</title>
-    <!-- Google Fonts for premium look -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #4F46E5;
             --primary-hover: #4338CA;
-            --bg: #F3F4F6;
-            --card-bg: #FFFFFF;
-            --text-main: #1F2937;
+            --text-main: #111827;
             --text-muted: #6B7280;
             --accent: #10B981;
+            --error: #EF4444;
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.6);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Inter', sans-serif;
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #f6f8fd 0%, #f1f5f9 100%);
+            /* Premium modern gradient background */
+            background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 50%, #e0f2fe 100%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -33,141 +35,234 @@
             padding: 20px;
         }
 
+        /* Glassmorphism Card */
         .calculator-wrapper {
-            background-color: var(--card-bg);
-            padding: 35px 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            padding: 40px 32px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 1);
             width: 100%;
-            max-width: 420px;
+            max-width: 440px;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .header h2 {
             color: var(--text-main);
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
         .header p {
             color: var(--text-muted);
             font-size: 14px;
-            margin-top: 5px;
+            margin-top: 6px;
+            font-weight: 400;
         }
 
+        /* Floating Label Inputs */
         .input-group {
-            margin-bottom: 18px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group svg {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: #9CA3AF;
+            pointer-events: none;
+            transition: color 0.3s ease;
+            z-index: 10;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 24px 16px 8px 48px;
+            border: 2px solid transparent;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+            transition: all 0.3s ease;
+            outline: none;
         }
 
         .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-main);
-            font-weight: 500;
-            font-size: 14px;
+            position: absolute;
+            left: 48px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 15px;
+            color: var(--text-muted);
+            pointer-events: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .input-wrapper {
-            position: relative;
-        }
-
-        .input-wrapper input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #E5E7EB;
-            border-radius: 10px;
-            font-size: 16px;
-            font-family: 'Poppins', sans-serif;
-            color: var(--text-main);
-            transition: all 0.3s ease;
-            background-color: #F9FAFB;
-        }
-
-        .input-wrapper input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background-color: #FFF;
+        /* Focus & Active States */
+        .input-group input:focus,
+        .input-group input:not(:placeholder-shown) {
+            border-color: rgba(79, 70, 229, 0.3);
+            background: #FFFFFF;
             box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
         }
 
-        button {
-            width: 100%;
-            background: linear-gradient(135deg, var(--primary), #6366F1);
-            color: white;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
+        .input-group input:focus + label,
+        .input-group input:not(:placeholder-shown) + label {
+            top: 14px;
+            font-size: 11px;
             font-weight: 600;
-            font-family: 'Poppins', sans-serif;
+            color: var(--primary);
+        }
+
+        .input-group input:focus ~ svg {
+            color: var(--primary);
+        }
+
+        /* Remove Number Arrows (Spinners) */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        /* Error Message Box */
+        .error-message {
+            background-color: #FEF2F2;
+            color: var(--error);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            border: 1px solid #FECACA;
+            display: none;
+            text-align: center;
+            font-weight: 500;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        button {
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-            margin-top: 10px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.2s ease;
         }
 
-        button:hover {
+        .btn-primary {
+            flex: 2;
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+            box-shadow: 0 8px 16px rgba(79, 70, 229, 0.35);
         }
 
-        button:active {
-            transform: translateY(0);
+        .btn-secondary {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--text-main);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
         /* Results Grid */
         .results-container {
-            margin-top: 25px;
-            display: none; /* JavaScript isko show karega */
-            animation: fadeIn 0.5s ease;
+            margin-top: 30px;
+            display: none;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .results-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 16px;
         }
 
         .result-card {
-            background-color: #F9FAFB;
-            border: 1px solid #E5E7EB;
-            padding: 15px;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0,0,0,0.04);
+            padding: 18px 14px;
+            border-radius: 16px;
             text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: transform 0.2s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.05);
         }
 
         .result-card.highlight {
-            background-color: #ECFDF5;
-            border-color: #6EE7B7;
+            background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+            border: 1px solid #A7F3D0;
         }
 
         .result-title {
             font-size: 12px;
             color: var(--text-muted);
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .result-card.highlight .result-title {
-            color: #047857;
+            color: #065F46;
         }
 
         .result-value {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--primary);
         }
 
         .result-card.highlight .result-value {
-            color: var(--accent);
+            color: #047857;
         }
     </style>
 </head>
@@ -175,51 +270,56 @@
 
     <div class="calculator-wrapper">
         <div class="header">
-            <h2>🛵 Petrol Calculator</h2>
-            <p>Apne daily safar ka hisaab lagayein</p>
+            <h2>Petrol Calculator</h2>
+            <p>Smart tracking for your daily commute</p>
         </div>
         
+        <div class="error-message" id="errorBox"></div>
+
+        <!-- Distance -->
         <div class="input-group">
+            <input type="number" id="distance" placeholder=" " min="0" step="0.1" oninput="clearError()" onkeydown="preventInvalidInput(event)">
             <label for="distance">Daily Safar (km)</label>
-            <div class="input-wrapper">
-                <input type="number" id="distance" value="22">
-            </div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
         </div>
 
+        <!-- Price -->
         <div class="input-group">
-            <label for="price">Petrol Price (Rs/Liter)</label>
-            <div class="input-wrapper">
-                <input type="number" id="price" value="300">
-            </div>
+            <input type="number" id="price" placeholder=" " min="0" step="0.1" oninput="clearError()" onkeydown="preventInvalidInput(event)">
+            <label for="price">Petrol Price (Rs/L)</label>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         </div>
 
+        <!-- Mileage -->
         <div class="input-group">
-            <label for="mileage">Bike Mileage (km/Liter)</label>
-            <div class="input-wrapper">
-                <input type="number" id="mileage" value="29.7" step="0.1">
-            </div>
+            <input type="number" id="mileage" placeholder=" " min="0" step="0.1" oninput="clearError()" onkeydown="preventInvalidInput(event)">
+            <label for="mileage">Bike Mileage (km/L)</label>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         </div>
 
+        <!-- Refuel -->
         <div class="input-group">
-            <label for="refuel">Kitne Ka Petrol Dalwaya? (Rs)</label>
-            <div class="input-wrapper">
-                <input type="number" id="refuel" value="1000" placeholder="e.g. 1000, 2000">
-            </div>
+            <input type="number" id="refuel" placeholder=" " min="0" oninput="clearError()" onkeydown="preventInvalidInput(event)">
+            <label for="refuel">Kitne Ka Dalwaya? (Rs)</label>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v16"/><path d="M18 10V6"/><path d="M6 14h.01"/><path d="M6 18h.01"/><path d="M10 14h.01"/><path d="M10 18h.01"/><path d="M14 14h.01"/><path d="M14 18h.01"/></svg>
         </div>
 
-        <button onclick="calculatePetrol()">Hisaab Lagao</button>
+        <div class="button-group">
+            <button class="btn-secondary" onclick="resetForm()">Clear</button>
+            <button class="btn-primary" onclick="calculatePetrol()">Hisaab Lagao</button>
+        </div>
 
         <!-- Results Section -->
         <div class="results-container" id="resultsBox">
             <div class="results-grid">
                 
                 <div class="result-card">
-                    <div class="result-title">Rozana Petrol (Liters)</div>
+                    <div class="result-title">Rozana Petrol</div>
                     <div class="result-value" id="res-daily-fuel">0 L</div>
                 </div>
 
                 <div class="result-card highlight">
-                    <div class="result-title">Rozana Ka Kharcha</div>
+                    <div class="result-title">Rozana Kharcha</div>
                     <div class="result-value" id="res-daily-cost">Rs. 0</div>
                 </div>
 
@@ -238,16 +338,36 @@
     </div>
 
     <script>
-        function calculatePetrol() {
-            // Get values from inputs
-            const distance = parseFloat(document.getElementById('distance').value);
-            const price = parseFloat(document.getElementById('price').value);
-            const mileage = parseFloat(document.getElementById('mileage').value);
-            const refuel = parseFloat(document.getElementById('refuel').value);
+        // Prevent typing 'e', '+', '-', or multiple dots in number fields
+        function preventInvalidInput(e) {
+            if (['e', 'E', '+', '-'].includes(e.key)) {
+                e.preventDefault();
+            }
+        }
 
-            // Validation check
-            if (isNaN(distance) || isNaN(price) || isNaN(mileage) || isNaN(refuel) || mileage <= 0 || price <= 0) {
-                alert("Bhai, please saari fields mein theek numbers likhein!");
+        function calculatePetrol() {
+            // Read inputs
+            const distanceInput = document.getElementById('distance').value;
+            const priceInput = document.getElementById('price').value;
+            const mileageInput = document.getElementById('mileage').value;
+            const refuelInput = document.getElementById('refuel').value;
+
+            // Convert to floats
+            const distance = parseFloat(distanceInput);
+            const price = parseFloat(priceInput);
+            const mileage = parseFloat(mileageInput);
+            const refuel = parseFloat(refuelInput);
+            
+            const errorBox = document.getElementById('errorBox');
+            const resultsBox = document.getElementById('resultsBox');
+
+            // Strict Validation
+            if (!distanceInput || !priceInput || !mileageInput || !refuelInput) {
+                showError("Bhai, pehle saari fields ko fill karein!");
+                return;
+            }
+            if (distance <= 0 || price <= 0 || mileage <= 0 || refuel <= 0) {
+                showError("Values zero (0) se zyada honi chahiye!");
                 return;
             }
 
@@ -257,20 +377,45 @@
             const totalFuel = refuel / price;
             const daysWillLast = refuel / dailyCost;
 
-            // Update UI with calculated values
+            // Update UI with precision
             document.getElementById('res-daily-fuel').innerText = dailyFuel.toFixed(2) + " L";
-            document.getElementById('res-daily-cost').innerText = "Rs. " + Math.round(dailyCost);
+            document.getElementById('res-daily-cost').innerText = "Rs. " + Math.round(dailyCost).toLocaleString();
             document.getElementById('res-total-fuel').innerText = totalFuel.toFixed(2) + " L";
             
-            // Format days neatly
+            // Format days smartly
             let daysText = daysWillLast.toFixed(1) + " Din";
-            if(daysWillLast < 1) {
-                 daysText = "1 Din se kam";
+            if (daysWillLast < 1) {
+                 daysText = "< 1 Din";
             }
             document.getElementById('res-days').innerText = daysText;
 
-            // Show the results section with animation
-            document.getElementById('resultsBox').style.display = 'block';
+            // Trigger reflow for slideUp animation if already open
+            resultsBox.style.display = 'none';
+            void resultsBox.offsetWidth; 
+            
+            errorBox.style.display = 'none';
+            resultsBox.style.display = 'block';
+        }
+
+        function showError(message) {
+            const errorBox = document.getElementById('errorBox');
+            errorBox.innerText = message;
+            errorBox.style.display = 'block';
+            document.getElementById('resultsBox').style.display = 'none';
+        }
+
+        function clearError() {
+            document.getElementById('errorBox').style.display = 'none';
+        }
+
+        function resetForm() {
+            document.getElementById('distance').value = '';
+            document.getElementById('price').value = '';
+            document.getElementById('mileage').value = '';
+            document.getElementById('refuel').value = '';
+            
+            clearError();
+            document.getElementById('resultsBox').style.display = 'none';
         }
     </script>
 

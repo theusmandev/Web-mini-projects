@@ -3,421 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Bike Petrol Calculator</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>VU Academic Goal Setter</title>
     <style>
-        :root {
-            --primary: #4F46E5;
-            --primary-hover: #4338CA;
-            --text-main: #111827;
-            --text-muted: #6B7280;
-            --accent: #10B981;
-            --error: #EF4444;
-            --glass-bg: rgba(255, 255, 255, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.6);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-        }
-
-        body {
-            /* Premium modern gradient background */
-            background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 50%, #e0f2fe 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        /* Glassmorphism Card */
-        .calculator-wrapper {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            padding: 40px 32px;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 1);
-            width: 100%;
-            max-width: 440px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .header h2 {
-            color: var(--text-main);
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .header p {
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-top: 6px;
-            font-weight: 400;
-        }
-
-        /* Floating Label Inputs */
-        .input-group {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .input-group svg {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            color: #9CA3AF;
-            pointer-events: none;
-            transition: color 0.3s ease;
-            z-index: 10;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 24px 16px 8px 48px;
-            border: 2px solid transparent;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-main);
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-            transition: all 0.3s ease;
-            outline: none;
-        }
-
-        .input-group label {
-            position: absolute;
-            left: 48px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 15px;
-            color: var(--text-muted);
-            pointer-events: none;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Focus & Active States */
-        .input-group input:focus,
-        .input-group input:not(:placeholder-shown) {
-            border-color: rgba(79, 70, 229, 0.3);
-            background: #FFFFFF;
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
-        }
-
-        .input-group input:focus + label,
-        .input-group input:not(:placeholder-shown) + label {
-            top: 14px;
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .input-group input:focus ~ svg {
-            color: var(--primary);
-        }
-
-        /* Remove Number Arrows (Spinners) */
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type="number"] {
-            -moz-appearance: textfield;
-        }
-
-        /* Error Message Box */
-        .error-message {
-            background-color: #FEF2F2;
-            color: var(--error);
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 13px;
-            margin-bottom: 20px;
-            border: 1px solid #FECACA;
-            display: none;
-            text-align: center;
-            font-weight: 500;
-            animation: shake 0.4s ease;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-4px); }
-            75% { transform: translateX(4px); }
-        }
-
-        /* Buttons */
-        .button-group {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-        }
-
-        button {
-            padding: 16px;
-            border: none;
-            border-radius: 14px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary {
-            flex: 2;
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(79, 70, 229, 0.35);
-        }
-
-        .btn-secondary {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.8);
-            color: var(--text-main);
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .btn-secondary:hover {
-            background: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        /* Results Grid */
-        .results-container {
-            margin-top: 30px;
-            display: none;
-            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .results-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .result-card {
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(0,0,0,0.04);
-            padding: 18px 14px;
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-            transition: transform 0.2s ease;
-        }
-
-        .result-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.05);
-        }
-
-        .result-card.highlight {
-            background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
-            border: 1px solid #A7F3D0;
-        }
-
-        .result-title {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .result-card.highlight .result-title {
-            color: #065F46;
-        }
-
-        .result-value {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .result-card.highlight .result-value {
-            color: #047857;
-        }
+        :root { --primary: #3b5998; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); display: flex; justify-content: center; padding: 20px; }
+        .calc-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { color: var(--primary); text-align: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 14px; margin-bottom: 5px; font-weight: bold; color: #555; }
+        .row { display: flex; gap: 10px; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
+        button { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        button:hover { background: #2d4373; }
+        #result { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; text-align: center; font-weight: bold; }
+        .success { background: #e7f4e4; color: #2e7d32; border: 1px solid #c8e6c9; }
+        .warning { background: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; }
     </style>
 </head>
 <body>
 
-    <div class="calculator-wrapper">
-        <div class="header">
-            <h2>Petrol Calculator</h2>
-            <p>Smart tracking for your daily commute</p>
-        </div>
-        
-        <div class="error-message" id="errorBox"></div>
-
-        <!-- Distance -->
-        <div class="input-group">
-            <input type="number" id="distance" placeholder=" " min="0" step="0.1" oninput="clearError()" onkeydown="preventInvalidInput(event)">
-            <label for="distance">Daily Safar (km)</label>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
-        </div>
-
-        <!-- Price -->
-        <div class="input-group">
-            <input type="number" id="price" placeholder=" " min="0" step="0.1" oninput="clearError()" onkeydown="preventInvalidInput(event)">
-            <label for="price">Petrol Price (Rs/L)</label>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        </div>
-
-        <!-- Mileage -->
-        <div class="input-group">
-            <input type="number" id="mileage" placeholder=" " min="0" step="0.1" oninput="clearError()" onkeydown="preventInvalidInput(event)">
-            <label for="mileage">Bike Mileage (km/L)</label>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        </div>
-
-        <!-- Refuel -->
-        <div class="input-group">
-            <input type="number" id="refuel" placeholder=" " min="0" oninput="clearError()" onkeydown="preventInvalidInput(event)">
-            <label for="refuel">Kitne Ka Dalwaya? (Rs)</label>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v16"/><path d="M18 10V6"/><path d="M6 14h.01"/><path d="M6 18h.01"/><path d="M10 14h.01"/><path d="M10 18h.01"/><path d="M14 14h.01"/><path d="M14 18h.01"/></svg>
-        </div>
-
-        <div class="button-group">
-            <button class="btn-secondary" onclick="resetForm()">Clear</button>
-            <button class="btn-primary" onclick="calculatePetrol()">Hisaab Lagao</button>
-        </div>
-
-        <!-- Results Section -->
-        <div class="results-container" id="resultsBox">
-            <div class="results-grid">
-                
-                <div class="result-card">
-                    <div class="result-title">Rozana Petrol</div>
-                    <div class="result-value" id="res-daily-fuel">0 L</div>
-                </div>
-
-                <div class="result-card highlight">
-                    <div class="result-title">Rozana Kharcha</div>
-                    <div class="result-value" id="res-daily-cost">Rs. 0</div>
-                </div>
-
-                <div class="result-card">
-                    <div class="result-title">Total Petrol Aya</div>
-                    <div class="result-value" id="res-total-fuel">0 L</div>
-                </div>
-
-                <div class="result-card highlight">
-                    <div class="result-title">Kitne Din Chalega?</div>
-                    <div class="result-value" id="res-days">0 Din</div>
-                </div>
-
-            </div>
+<div class="calc-card">
+    <h2>VU Academic Goal Setter</h2>
+    
+    <div class="input-group">
+        <label>Sessional (Quizzes/GDB/Assignment) [20% Weight]</label>
+        <div class="row">
+            <input type="number" id="sessObt" placeholder="Obtained">
+            <input type="number" id="sessTotal" placeholder="Total">
         </div>
     </div>
 
-    <script>
-        // Prevent typing 'e', '+', '-', or multiple dots in number fields
-        function preventInvalidInput(e) {
-            if (['e', 'E', '+', '-'].includes(e.key)) {
-                e.preventDefault();
-            }
-        }
+    <div class="input-group">
+        <label>Midterm Marks [20% Weight]</label>
+        <div class="row">
+            <input type="number" id="midObt" placeholder="Obtained">
+            <input type="number" id="midTotal" placeholder="Total">
+        </div>
+    </div>
 
-        function calculatePetrol() {
-            // Read inputs
-            const distanceInput = document.getElementById('distance').value;
-            const priceInput = document.getElementById('price').value;
-            const mileageInput = document.getElementById('mileage').value;
-            const refuelInput = document.getElementById('refuel').value;
+    <div class="input-group">
+        <label>Target Overall Percentage (%)</label>
+        <input type="number" id="target" value="80">
+    </div>
 
-            // Convert to floats
-            const distance = parseFloat(distanceInput);
-            const price = parseFloat(priceInput);
-            const mileage = parseFloat(mileageInput);
-            const refuel = parseFloat(refuelInput);
-            
-            const errorBox = document.getElementById('errorBox');
-            const resultsBox = document.getElementById('resultsBox');
+    <button onclick="calculate()">Calculate Required Final Marks</button>
 
-            // Strict Validation
-            if (!distanceInput || !priceInput || !mileageInput || !refuelInput) {
-                showError("Bhai, pehle saari fields ko fill karein!");
-                return;
-            }
-            if (distance <= 0 || price <= 0 || mileage <= 0 || refuel <= 0) {
-                showError("Values zero (0) se zyada honi chahiye!");
-                return;
-            }
+    <div id="result"></div>
+</div>
 
-            // Calculations
-            const dailyFuel = distance / mileage;
-            const dailyCost = dailyFuel * price;
-            const totalFuel = refuel / price;
-            const daysWillLast = refuel / dailyCost;
+<script>
+function calculate() {
+    // Inputs
+    const sessObt = parseFloat(document.getElementById('sessObt').value);
+    const sessTotal = parseFloat(document.getElementById('sessTotal').value);
+    const midObt = parseFloat(document.getElementById('midObt').value);
+    const midTotal = parseFloat(document.getElementById('midTotal').value);
+    const target = parseFloat(document.getElementById('target').value);
+    const resultDiv = document.getElementById('result');
 
-            // Update UI with precision
-            document.getElementById('res-daily-fuel').innerText = dailyFuel.toFixed(2) + " L";
-            document.getElementById('res-daily-cost').innerText = "Rs. " + Math.round(dailyCost).toLocaleString();
-            document.getElementById('res-total-fuel').innerText = totalFuel.toFixed(2) + " L";
-            
-            // Format days smartly
-            let daysText = daysWillLast.toFixed(1) + " Din";
-            if (daysWillLast < 1) {
-                 daysText = "< 1 Din";
-            }
-            document.getElementById('res-days').innerText = daysText;
+    if (isNaN(sessObt) || isNaN(sessTotal) || isNaN(midObt) || isNaN(midTotal)) {
+        alert("Please fill all fields correctly!");
+        return;
+    }
 
-            // Trigger reflow for slideUp animation if already open
-            resultsBox.style.display = 'none';
-            void resultsBox.offsetWidth; 
-            
-            errorBox.style.display = 'none';
-            resultsBox.style.display = 'block';
-        }
+    // Weighted Score Logic
+    const currentSessWeight = (sessObt / sessTotal) * 20;
+    const currentMidWeight = (midObt / midTotal) * 20;
+    const currentTotalPoints = currentSessWeight + currentMidWeight;
+    
+    const pointsNeededFromFinal = target - currentTotalPoints;
+    
+    // Final is 60% weight, so points needed translates to marks
+    // Assuming Final Paper is 60 marks total
+    const requiredInFinal = pointsNeededFromFinal; 
 
-        function showError(message) {
-            const errorBox = document.getElementById('errorBox');
-            errorBox.innerText = message;
-            errorBox.style.display = 'block';
-            document.getElementById('resultsBox').style.display = 'none';
-        }
-
-        function clearError() {
-            document.getElementById('errorBox').style.display = 'none';
-        }
-
-        function resetForm() {
-            document.getElementById('distance').value = '';
-            document.getElementById('price').value = '';
-            document.getElementById('mileage').value = '';
-            document.getElementById('refuel').value = '';
-            
-            clearError();
-            document.getElementById('resultsBox').style.display = 'none';
-        }
-    </script>
+    resultDiv.style.display = 'block';
+    
+    if (requiredInFinal > 60) {
+        resultDiv.className = 'warning';
+        resultDiv.innerHTML = `Target mushkil hai! Aapko 60 mein se ${requiredInFinal.toFixed(2)} marks chahiye, jo ke possible nahi.`;
+    } else if (requiredInFinal <= 0) {
+        resultDiv.className = 'success';
+        resultDiv.innerHTML = `Mubarak ho! Aap pehle hi target achieve kar chuke hain.`;
+    } else {
+        resultDiv.className = 'success';
+        resultDiv.innerHTML = `Target (${target}%) ke liye aapko Final Exam (60 Marks) mein kam az kam <b>${requiredInFinal.toFixed(2)}</b> marks chahiye.`;
+    }
+}
+</script>
 
 </body>
 </html>
